@@ -1,9 +1,7 @@
-import 'package:csse/models/user_model.dart';
-
 class SiteModel {
   String? id;
   String name;
-  UserModel createdBy;
+  String createdBy;
   String location;
 
   SiteModel({
@@ -17,7 +15,7 @@ class SiteModel {
     return SiteModel(
       id: map['id'],
       name: map['name'],
-      createdBy: UserModel.fromMap(map['createdBy']),
+      createdBy: map['createdBy'],
       location: map['location'],
     );
   }
@@ -26,7 +24,7 @@ class SiteModel {
     return {
       'id': id,
       'name': name,
-      'createdBy': createdBy.toMap(),
+      'createdBy': createdBy,
       'location': location,
     };
   }

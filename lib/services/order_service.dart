@@ -1,8 +1,10 @@
 import 'package:csse/models/order_model.dart';
 import 'package:csse/services/api_handler.dart';
+import 'package:csse/utils/constants.dart';
+import 'package:logger/logger.dart';
 
 class OrderService {
-  final ApiHandler _apiHandler = ApiHandler('YOUR_BACKEND_BASE_URL');
+  final ApiHandler _apiHandler = ApiHandler('$baseUrl/supply-requests/');
 
   Future<void> addOrder(OrderModel order) async {
     try {
@@ -19,6 +21,7 @@ class OrderService {
           .map((item) => OrderModel.fromMap(item))
           .toList();
     } catch (e) {
+      Logger().e('$e');
       throw Error.safeToString(e);
     }
   }

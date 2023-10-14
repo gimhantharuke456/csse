@@ -101,7 +101,7 @@ class _ProfileViewState extends State<ProfileView> {
                               try {
                                 SiteModel site = SiteModel(
                                   name: siteName.text,
-                                  createdBy: userProvider.user!,
+                                  createdBy: userProvider.user!.id!,
                                   location: siteLocation.text,
                                 );
                                 await SiteService().createSite(site);

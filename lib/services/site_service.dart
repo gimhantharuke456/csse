@@ -1,10 +1,13 @@
+import 'dart:convert';
+
 import 'package:csse/models/site_model.dart';
 import 'package:csse/services/api_handler.dart';
 import 'package:csse/utils/constants.dart';
+import 'package:http/http.dart' as http;
 
 class SiteService {
   final ApiHandler _apiHandler =
-      ApiHandler('$baseUrl/api/'); // Replace with your backend base URL
+      ApiHandler('$baseUrl/api'); // Replace with your backend base URL
 
   Future<void> createSite(SiteModel site) async {
     try {
@@ -25,8 +28,10 @@ class SiteService {
 
   Future<List<SiteModel>> getAllSites(String email) async {
     try {
-      final response = await _apiHandler.get('sites/$email');
-      return (response as List).map((item) => SiteModel.fromMap(item)).toList();
+      final List<SiteModel> s = [];
+      final response = await http.get(Uri.parse('$baseUrl/api/site/$email'));
+      List l = jsonDecode(response.body).toList();
+      return l.map((e) => SiteModel.fromMap(e)).toList();
     } catch (e) {
       throw Error.safeToString(e);
     }

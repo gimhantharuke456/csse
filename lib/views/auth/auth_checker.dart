@@ -32,7 +32,7 @@ class _AuthCheckerState extends State<AuthChecker> {
     _authService.getCurrentUser().then((user) {
       if (user != null) {
         userProvider.updateUser(user);
-        _siteService.getAllSites(user.email).then((value) {
+        _siteService.getAllSites(user.id ?? '').then((value) {
           if (value != null) {
             userProvider.setSite(value[0]);
             Logger().d('site setted');

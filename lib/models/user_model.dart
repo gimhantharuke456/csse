@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:logger/logger.dart';
 
 class UserModel {
   final String? id;
@@ -23,6 +24,7 @@ class UserModel {
   }
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'name': name,
       'email': email,
       'role': role,
@@ -31,7 +33,7 @@ class UserModel {
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
-      id: map['id'],
+      id: map['_id'],
       name: map['name'],
       email: map['email'],
       role: map['role'],
