@@ -11,11 +11,11 @@ class UserService {
   final _siteService = SiteService();
   Future<void> addUser(UserModel user, String password) async {
     try {
-      await _authService.signupUser(user.email, password).then((value) async {
-        await _firestore.collection(usersCollection).doc(value).set(
-              user.toMap(),
-            );
-      });
+      // await _authService.signupUser(user.email, password).then((value) async {
+      //   await _firestore.collection(usersCollection).doc(value).set(
+      //         user.toMap(),
+      //       );
+      // });
     } catch (e) {
       throw Error.safeToString(e);
     }
@@ -29,14 +29,7 @@ class UserService {
           .where('role', isEqualTo: "siteManager")
           .get()
           .then((value) async {
-        for (DocumentSnapshot snapshot in value.docs) {
-          SiteManagerModel manager =
-              SiteManagerModel.fromDocumentSnapshot(snapshot);
-          Site? site = await _siteService.getSite(manager.id!);
-          if (site != null) {
-         
-          }
-        }
+        for (DocumentSnapshot snapshot in value.docs) {}
       });
       return managers;
     } catch (e) {

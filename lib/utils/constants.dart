@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+//urls
+const String baseUrl =
+    'https://77c2-2402-d000-a400-b8db-a0b1-6696-9f65-7b3c.ngrok-free.app';
+
 //colors
 const Color primaryColor = Color(0xFFFFCE30);
 const Color darkBlue = Color(0xFF182B69);

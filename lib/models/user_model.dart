@@ -28,6 +28,15 @@ class UserModel {
       'role': role,
     };
   }
+
+  factory UserModel.fromMap(Map<String, dynamic> map) {
+    return UserModel(
+      id: map['id'],
+      name: map['name'],
+      email: map['email'],
+      role: map['role'],
+    );
+  }
 }
 
 class SiteManagerModel extends UserModel {
@@ -58,5 +67,16 @@ class SiteManagerModel extends UserModel {
       'email': email,
       'role': role,
     };
+  }
+
+  factory SiteManagerModel.fromMap(Map<String, dynamic> map) {
+    return SiteManagerModel(
+      id: map['id'],
+      name: map['name'],
+      email: map['email'],
+      role: map['role'],
+      siteId: map['siteId'],
+      siteName: map['siteName'],
+    );
   }
 }

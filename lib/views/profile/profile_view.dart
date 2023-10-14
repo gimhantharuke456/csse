@@ -1,5 +1,7 @@
+import 'package:csse/models/site_model.dart';
 import 'package:csse/providers/user_provider.dart';
 import 'package:csse/services/local_prefs.dart';
+import 'package:csse/services/site_service.dart';
 import 'package:csse/utils/constants.dart';
 import 'package:csse/utils/index.dart';
 import 'package:csse/views/auth/auth_checker.dart';
@@ -20,7 +22,8 @@ class _ProfileViewState extends State<ProfileView> {
   late UserProvider userProvider;
   final TextEditingController name = TextEditingController();
   final TextEditingController email = TextEditingController();
-
+  final TextEditingController siteName = TextEditingController();
+  final TextEditingController siteLocation = TextEditingController();
   @override
   void initState() {
     userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -69,12 +72,67 @@ class _ProfileViewState extends State<ProfileView> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(defaultPadding),
+            padding: const EdgeInsets.symmetric(
+              vertical: 2,
+              horizontal: defaultPadding,
+            ),
+            child: MainButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => Dialog(
+                    child: Container(
+                      padding: const EdgeInsets.all(defaultPadding),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          CustomInputField(
+                            label: 'Name',
+                            hint: 'Site name',
+                            controller: siteName,
+                          ),
+                          CustomInputField(
+                            label: 'Location',
+                            hint: 'Site location',
+                            controller: siteLocation,
+                          ),
+                          MainButton(
+                            onPressed: () async {
+                              try {
+                                SiteModel site = SiteModel(
+                                  name: siteName.text,
+                                  createdBy: userProvider.user!,
+                                  location: siteLocation.text,
+                                );
+                                await SiteService().createSite(site);
+                                Navigator.pop(context);
+                                context
+                                    .showSnackBar('site created successfully');
+                              } catch (e) {
+                                context.showSnackBar('$e');
+                              }
+                            },
+                            title: 'Add',
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+              title: 'Add Site',
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 2,
+              horizontal: defaultPadding,
+            ),
             child: MainButton(
               onPressed: () {},
               title: 'Update',
             ),
-          )
+          ),
         ],
       ),
     );

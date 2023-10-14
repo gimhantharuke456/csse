@@ -1,35 +1,33 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:csse/models/user_model.dart';
 
-class Site {
-  final String? id;
-  final String name;
-  final String location;
-  final double budget;
-  final String? siteManagerId;
-  Site({
+class SiteModel {
+  String? id;
+  String name;
+  UserModel createdBy;
+  String location;
+
+  SiteModel({
     this.id,
     required this.name,
+    required this.createdBy,
     required this.location,
-    required this.budget,
-    this.siteManagerId,
   });
 
-  factory Site.fromDocumentSnapshot(DocumentSnapshot snapshot) {
-    final data = snapshot.data() as Map<String, dynamic>;
-    return Site(
-        id: snapshot.id,
-        name: data['name'] ?? '',
-        location: data['location'] ?? '',
-        budget: (data['budget'] ?? 0.0).toDouble(),
-        siteManagerId: data['siteManagerId']);
+  factory SiteModel.fromMap(Map<String, dynamic> map) {
+    return SiteModel(
+      id: map['id'],
+      name: map['name'],
+      createdBy: UserModel.fromMap(map['createdBy']),
+      location: map['location'],
+    );
   }
 
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'name': name,
+      'createdBy': createdBy.toMap(),
       'location': location,
-      'budget': budget,
-      'siteManagerId': siteManagerId,
     };
   }
 }

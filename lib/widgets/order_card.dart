@@ -1,5 +1,6 @@
 import 'package:csse/models/add_order_model.dart';
 import 'package:csse/providers/add_order_provider.dart';
+import 'package:csse/providers/user_provider.dart';
 import 'package:csse/utils/constants.dart';
 import 'package:csse/utils/index.dart';
 import 'package:csse/views/order/order_view.dart';
@@ -9,7 +10,7 @@ import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 class OrderCard extends StatelessWidget {
-  final OrderModel order;
+  final AddOrderModel order;
   const OrderCard({
     super.key,
     required this.order,
@@ -19,11 +20,12 @@ class OrderCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final AddOrderProvider addOrderProvider =
         Provider.of<AddOrderProvider>(context);
+    final UserProvider userProvider = Provider.of<UserProvider>(context);
     return GestureDetector(
       onTap: () {
         addOrderProvider.setDeliveryDetails(
-          requestedBy: order.requestedBy,
-          requestedTo: order.supplier,
+          requestedBy: userProvider.user!.id!,
+          requestedTo: addOrderProvider.orderModel.supplier!,
           siteId: order.siteId,
           deliveryDate: order.requesingDate,
           address: order.address,

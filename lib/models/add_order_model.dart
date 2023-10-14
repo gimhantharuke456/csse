@@ -1,17 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:logger/logger.dart';
+import 'package:csse/models/order_model.dart' as s;
 
-class OrderModel {
+class AddOrderModel {
   final String? id;
   String requestedBy;
   String siteId;
   DateTime requesingDate;
   String address;
-  String supplier;
+  s.SupplierModel? supplier;
   String contactNumber;
   List<OrderItem> items;
   final String status;
-  OrderModel({
+  AddOrderModel({
     this.id,
     required this.requestedBy,
     required this.siteId,
@@ -37,11 +38,11 @@ class OrderModel {
     };
   }
 
-  factory OrderModel.fromDocumentSnapshot(DocumentSnapshot snapshot) {
+  factory AddOrderModel.fromDocumentSnapshot(DocumentSnapshot snapshot) {
     Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
 
     try {
-      return OrderModel(
+      return AddOrderModel(
         id: snapshot.id,
         requestedBy: data['requestedBy'] ?? '',
         siteId: data['siteId'] ?? '',
@@ -66,7 +67,7 @@ class OrderModel {
   set setAddress(String a) => address = a;
   set setContactNumber(String number) => contactNumber = number;
   set setItems(List<OrderItem> i) => items = i;
-  set setSuppler(String s) => supplier = s;
+  set setSuppler(s.SupplierModel s) => supplier = s;
 }
 
 class OrderItem {

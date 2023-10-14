@@ -28,15 +28,15 @@ class _ItemScreenState extends State<ItemScreen> {
     });
     supplierProvider = Provider.of<SupplierProvider>(context, listen: false);
 
-    _supplierService.getSuppliers().then((value) {
-      supplierProvider.setSuppliers(value);
+    // _supplierService.getSuppliers().then((value) {
+    //   supplierProvider.setSuppliers(value);
 
-      _supplierService.getSupplierProducts(value[0].id ?? '').then((value) {
-        setState(() {
-          items = value;
-        });
-      });
-    });
+    //   _supplierService.getSupplierProducts(value[0].id ?? '').then((value) {
+    //     setState(() {
+    //       items = value;
+    //     });
+    //   });
+    // });
     setState(() {
       shouldLoad = false;
     });

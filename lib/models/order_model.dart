@@ -1,45 +1,97 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
-class Order {
+class OrderModel {
   final String? id;
-  final String siteId;
-  final String supplierId;
-  final List<String> products;
-  final DateTime orderDate;
-  final DateTime deliveryDate;
+  final List<ItemModel> items;
+  final SupplierModel supplier;
+  final DateTime requestedDate;
   final String status;
 
-  Order({
+  OrderModel({
     this.id,
-    required this.siteId,
-    required this.supplierId,
-    required this.products,
-    required this.orderDate,
-    required this.deliveryDate,
+    required this.items,
+    required this.supplier,
+    required this.requestedDate,
     required this.status,
   });
 
-  factory Order.fromDocumentSnapshot(DocumentSnapshot snapshot) {
-    final data = snapshot.data() as Map<String, dynamic>;
-    return Order(
-      id: snapshot.id,
-      siteId: data['siteId'] ?? '',
-      supplierId: data['supplierId'] ?? '',
-      products: List<String>.from(data['products'] ?? []),
-      orderDate: data['orderDate'].toDate(),
-      deliveryDate: data['deliveryDate'].toDate(),
-      status: data['status'] ?? 'pending',
+  factory OrderModel.fromMap(Map<String, dynamic> map) {
+    return OrderModel(
+      id: map['_id'],
+      items: List<ItemModel>.from(
+          map['items'].map((item) => ItemModel.fromMap(item))),
+      supplier: SupplierModel.fromMap(map['supplier']),
+      requestedDate: DateTime.parse(map['requestedDate']),
+      status: map['status'],
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'siteId': siteId,
-      'supplierId': supplierId,
-      'products': products,
-      'orderDate': orderDate,
-      'deliveryDate': deliveryDate,
+      '_id': id,
+      'items': items.map((item) => item.toMap()).toList(),
+      'supplier': supplier.toMap(),
+      'requestedDate': requestedDate.toIso8601String(),
       'status': status,
+    };
+  }
+}
+
+class ItemModel {
+  final String name;
+  final int quantity;
+
+  ItemModel({required this.name, required this.quantity});
+
+  factory ItemModel.fromMap(Map<String, dynamic> map) {
+    return ItemModel(
+      name: map['name'],
+      quantity: map['quantity'],
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'quantity': quantity,
+    };
+  }
+}
+
+class SupplierModel {
+  String id;
+  final String supID;
+  final String name;
+  final String email;
+  final String contact;
+  final String company;
+
+  SupplierModel({
+    required this.id,
+    required this.supID,
+    required this.name,
+    required this.email,
+    required this.contact,
+    required this.company,
+  });
+
+  factory SupplierModel.fromMap(Map<String, dynamic> map) {
+    return SupplierModel(
+      id: map['_id'],
+      supID: map['supID'],
+      name: map['sname'],
+      email: map['semail'],
+      contact: map['scontact'],
+      company: map['scompany'],
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'supID': supID,
+      'name': name,
+      'email': email,
+      'contact': contact,
+      'company': company,
     };
   }
 }

@@ -1,13 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:csse/models/add_order_model.dart';
-import 'package:csse/utils/collection_names.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:csse/models/order_model.dart';
+import 'package:csse/services/api_handler.dart';
 
 class OrderService {
-  final _firestore = FirebaseFirestore.instance;
+  final ApiHandler _apiHandler = ApiHandler('YOUR_BACKEND_BASE_URL');
+
   Future<void> addOrder(OrderModel order) async {
     try {
-      await _firestore.collection(orderCollection).add(order.toJson());
+      await _apiHandler.post('supply-requests', order.toMap());
     } catch (e) {
       throw Error.safeToString(e);
     }
@@ -15,16 +14,26 @@ class OrderService {
 
   Future<List<OrderModel>> getOrders() async {
     try {
-      return await _firestore
-          .collection(orderCollection)
-          .where('requestedBy',
-              isEqualTo: FirebaseAuth.instance.currentUser?.email)
-          .get()
-          .then((value) {
-        return value.docs
-            .map((e) => OrderModel.fromDocumentSnapshot(e))
-            .toList();
-      });
+      final response = await _apiHandler.get('supply-requests');
+      return (response as List)
+          .map((item) => OrderModel.fromMap(item))
+          .toList();
+    } catch (e) {
+      throw Error.safeToString(e);
+    }
+  }
+
+  Future<void> updateOrder(OrderModel order) async {
+    try {
+      await _apiHandler.put('supply-requests/${order.id}', order.toMap());
+    } catch (e) {
+      throw Error.safeToString(e);
+    }
+  }
+
+  Future<void> deleteOrder(OrderModel orderModel) async {
+    try {
+      await _apiHandler.delete('supply-requests/${orderModel.id}');
     } catch (e) {
       throw Error.safeToString(e);
     }

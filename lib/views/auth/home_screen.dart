@@ -29,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     _supplerProvider = Provider.of(context, listen: false);
     _supplierService
-        .getSuppliers()
+        .getAllSuppliers()
         .then((value) => _supplerProvider.setSuppliers(value));
     super.initState();
   }

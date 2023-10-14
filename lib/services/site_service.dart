@@ -1,39 +1,57 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csse/models/site_model.dart';
-import 'package:csse/utils/collection_names.dart';
+import 'package:csse/services/api_handler.dart';
+import 'package:csse/utils/constants.dart';
 
 class SiteService {
-  final _firebase = FirebaseFirestore.instance;
-  Future<Site?> getSite(String id) async {
+  final ApiHandler _apiHandler =
+      ApiHandler('$baseUrl/api/'); // Replace with your backend base URL
+
+  Future<void> createSite(SiteModel site) async {
     try {
-      return await _firebase
-          .collection(siteCollection)
-          .where('siteManagerId', isEqualTo: id)
-          .get()
-          .then((value) {
-        if (value.docs.isNotEmpty) {
-          return Site.fromDocumentSnapshot(value.docs[0]);
-        }
-        return null;
-      });
+      await _apiHandler.post('sites', site.toMap());
     } catch (e) {
       throw Error.safeToString(e);
     }
   }
 
-  Future<Site?> getSiteByUserEmail(String email) async {
+  Future<SiteModel> getSiteById(String id) async {
     try {
-      return await _firebase
-          .collection(siteCollection)
-          .where("siteManagerId", isEqualTo: email)
-          .get()
-          .then((value) {
-        if (value.docs.isNotEmpty) {
-          return Site.fromDocumentSnapshot(value.docs[0]);
-        } else {
-          return null;
-        }
-      });
+      final response = await _apiHandler.get('sites/$id');
+      return SiteModel.fromMap(response);
+    } catch (e) {
+      throw Error.safeToString(e);
+    }
+  }
+
+  Future<List<SiteModel>> getAllSites(String email) async {
+    try {
+      final response = await _apiHandler.get('sites/$email');
+      return (response as List).map((item) => SiteModel.fromMap(item)).toList();
+    } catch (e) {
+      throw Error.safeToString(e);
+    }
+  }
+
+  Future<void> updateSite(SiteModel site) async {
+    try {
+      await _apiHandler.put('sites/${site.id}', site.toMap());
+    } catch (e) {
+      throw Error.safeToString(e);
+    }
+  }
+
+  Future<void> deleteSite(String id) async {
+    try {
+      await _apiHandler.delete('sites/$id');
+    } catch (e) {
+      throw Error.safeToString(e);
+    }
+  }
+
+  Future<List<SiteModel>> getSitesByCreatedBy(String createdBy) async {
+    try {
+      final response = await _apiHandler.get('sites?createdBy=$createdBy');
+      return (response as List).map((item) => SiteModel.fromMap(item)).toList();
     } catch (e) {
       throw Error.safeToString(e);
     }

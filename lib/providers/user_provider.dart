@@ -4,15 +4,15 @@ import 'package:flutter/material.dart';
 
 class UserProvider with ChangeNotifier {
   UserModel? _user;
-  Site? _site;
+  SiteModel? _site;
   UserModel? get user => _user;
-  Site? get site => _site;
+  SiteModel? get site => _site;
   void updateUser(UserModel newUser) {
     _user = newUser;
     notifyListeners();
   }
 
-  void setSite(Site site) {
+  void setSite(SiteModel site) {
     _site = site;
     notifyListeners();
   }

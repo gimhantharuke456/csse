@@ -1,4 +1,4 @@
-import 'package:csse/models/supplier_model.dart';
+import 'package:csse/models/order_model.dart';
 import 'package:csse/providers/add_order_provider.dart';
 import 'package:csse/providers/supplier_provider.dart';
 import 'package:csse/providers/user_provider.dart';
@@ -83,7 +83,7 @@ class _AddOrderDeliveryDetialsState extends State<AddOrderDeliveryDetials> {
                       items: supplierProvider.suppliers
                           .map((e) => DropdownMenuItem<SupplierModel>(
                                 value: e,
-                                child: Text(e.businessName),
+                                child: Text(e.name),
                               ))
                           .toList(),
                       decoration: InputDecoration(
@@ -145,7 +145,7 @@ class _AddOrderDeliveryDetialsState extends State<AddOrderDeliveryDetials> {
                     selectedSupplier != null) {
                   addOrderProvider.setDeliveryDetails(
                     requestedBy: requestedBy.text,
-                    requestedTo: selectedSupplier?.id ?? '',
+                    requestedTo: selectedSupplier!,
                     siteId: siteName.text,
                     deliveryDate: dateSelected!,
                     address: deliveryAddress.text,

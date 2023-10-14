@@ -1,4 +1,4 @@
-import 'package:csse/models/supplier_model.dart';
+import 'package:csse/models/order_model.dart';
 import 'package:flutter/material.dart';
 
 class SupplierProvider with ChangeNotifier {

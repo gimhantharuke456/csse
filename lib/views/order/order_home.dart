@@ -53,10 +53,7 @@ class _OrderHomeState extends State<OrderHome> {
               ),
             ),
             Consumer<OrderProvider>(
-              builder: (context, value, _) => Expanded(
-                  child: ListView(
-                children: value.orders.map((e) => OrderCard(order: e)).toList(),
-              )),
+              builder: (context, value, _) => Expanded(child: ListView()),
             ),
           ],
         ),

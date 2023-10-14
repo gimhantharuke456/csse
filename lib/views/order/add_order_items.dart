@@ -37,14 +37,14 @@ class _AddOrderItemsState extends State<AddOrderItems> {
       shouldLoad = true;
     });
     try {
-      SupplierService()
-          .getSupplierProducts(addOrderProvider.orderModel.supplier)
-          .then((value) => setState(() {
-                products = value;
-                if (products.isNotEmpty) {
-                  selectedValue = products[0];
-                }
-              }));
+      // SupplierService()
+      //     .getSupplierProducts(addOrderProvider.orderModel.supplier?.id ?? '')
+      //     .then((value) => setState(() {
+      //           products = value;
+      //           if (products.isNotEmpty) {
+      //             selectedValue = products[0];
+      //           }
+      //         }));
     } catch (e) {
       Logger().e(e);
       context.showSnackBar(e.toString());

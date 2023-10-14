@@ -1,21 +1,23 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csse/models/user_model.dart';
 import 'package:csse/services/local_prefs.dart';
-import 'package:csse/utils/collection_names.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:csse/services/api_handler.dart';
+import 'package:csse/utils/constants.dart';
 
 class AuthService {
-  final _auth = FirebaseAuth.instance;
   final _localPrefs = LocalPreferences.instance;
-  final _firebase = FirebaseFirestore.instance;
+  final _apiHandler = ApiHandler('$baseUrl/api');
+
   Future<void> signinWithEmailAndPassword(String email, String password) async {
     try {
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
-      _localPrefs.setToken(_auth.currentUser!.uid);
-      _localPrefs.setEmail(email);
-      _localPrefs.setPassword(password);
-    } on FirebaseAuthException catch (e) {
-      throw Error.safeToString(e.message);
+      final response = await _apiHandler
+          .post('site-managers/login', {'email': email, 'password': password});
+      // Assuming your backend returns a token upon successful login
+      final String? token = response['_id'];
+      if (token != null) {
+        _localPrefs.setUid(token);
+        _localPrefs.setToken(token);
+        _localPrefs.setEmail(email);
+      }
     } catch (e) {
       throw Error.safeToString(e);
     }
@@ -23,17 +25,12 @@ class AuthService {
 
   Future<UserModel?> getCurrentUser() async {
     try {
-      String? uid = _auth.currentUser!.email;
-      print(uid);
-      DocumentSnapshot snap =
-          await _firebase.collection(usersCollection).doc(uid).get();
-      if (snap.exists) {
-        return UserModel.fromDocumentSnapshot(snap);
-      } else {
-        throw Error.safeToString('User not found');
+      final String? userId = _localPrefs.getUid();
+      if (userId != null) {
+        final response = await _apiHandler.get('site-managers/$userId');
+        return UserModel.fromMap(response);
       }
-    } on FirebaseException catch (e) {
-      throw Error.safeToString(e.message);
+      return null;
     } catch (e) {
       throw Error.safeToString(e);
     }
@@ -41,26 +38,27 @@ class AuthService {
 
   Future<void> signOutUser() async {
     try {
-      await _auth.signOut();
       _localPrefs.clearePrefs();
-    } on FirebaseException catch (e) {
-      throw Error.safeToString(e.message);
     } catch (e) {
       throw Error.safeToString(e);
     }
   }
 
-  Future<String?> signupUser(String email, String password) async {
+  Future<String?> signupUser(String email, String password, String name) async {
     try {
-      return await _auth
-          .createUserWithEmailAndPassword(email: email, password: password)
-          .then((value) async {
-        await _auth.signOut();
-        await signinWithEmailAndPassword(email, password);
-        return value.user?.uid;
+      final response = await _apiHandler.post('/site-managers', {
+        'email': email,
+        'password': password,
+        'name': name,
       });
-    } on FirebaseException catch (e) {
-      throw Error.safeToString(e.message);
+
+      final String? token = response['_id'];
+      if (token != null) {
+        _localPrefs.setUid(token);
+        _localPrefs.setToken(token);
+        _localPrefs.setEmail(email);
+      }
+      return token;
     } catch (e) {
       throw Error.safeToString(e);
     }

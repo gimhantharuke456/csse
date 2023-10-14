@@ -32,9 +32,9 @@ class _AuthCheckerState extends State<AuthChecker> {
     _authService.getCurrentUser().then((user) {
       if (user != null) {
         userProvider.updateUser(user);
-        _siteService.getSiteByUserEmail(user.email).then((value) {
+        _siteService.getAllSites(user.email).then((value) {
           if (value != null) {
-            userProvider.setSite(value);
+            userProvider.setSite(value[0]);
             Logger().d('site setted');
           } else {
             Logger().e('Site not found');
@@ -49,7 +49,7 @@ class _AuthCheckerState extends State<AuthChecker> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: _localPrefs.getToken(),
+      future: _localPrefs.getEmail(),
       builder: (context, AsyncSnapshot<String?> snapshot) {
         return snapshot.connectionState == ConnectionState.done
             ? snapshot.data != null
@@ -57,7 +57,7 @@ class _AuthCheckerState extends State<AuthChecker> {
                     return value.user != null
                         ? value.user!.role == 'admin'
                             ? const NoPermissions()
-                            : value.user!.role == "siteManager"
+                            : value.user!.role == "site manager"
                                 ? const HomeScreen()
                                 : Container(
                                     width: double.maxFinite,

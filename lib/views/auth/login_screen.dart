@@ -4,6 +4,7 @@ import 'package:csse/services/auth_service.dart';
 import 'package:csse/utils/constants.dart';
 import 'package:csse/utils/index.dart';
 import 'package:csse/views/auth/auth_checker.dart';
+import 'package:csse/views/auth/signup_screen.dart';
 import 'package:csse/widgets/CustomTitle.dart';
 import 'package:csse/widgets/input_field.dart';
 import 'package:csse/widgets/loading_wrapper.dart';
@@ -76,6 +77,23 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 ),
                 const Spacer(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text("Don't have an account?"),
+                    TextButton(
+                      onPressed: () {
+                        context.navigator(context, const SignupScreen());
+                      },
+                      child: const Text(
+                        "Signup Now",
+                        style: TextStyle(
+                          color: primaryColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
                 MainButton(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {

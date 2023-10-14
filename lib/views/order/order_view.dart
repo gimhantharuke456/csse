@@ -1,3 +1,5 @@
+import 'package:csse/models/add_order_model.dart';
+import 'package:csse/models/order_model.dart';
 import 'package:csse/providers/add_order_provider.dart';
 import 'package:csse/providers/loading_provider.dart';
 import 'package:csse/services/order_service.dart';
@@ -269,8 +271,20 @@ class OrderView extends StatelessWidget {
                     onPressed: () async {
                       try {
                         loadingProvider.updateLoadingState(state: true);
-                        await OrderService()
-                            .addOrder(addOrderProvider.orderModel);
+                        OrderModel order = OrderModel(
+                          items: addOrderProvider.orderModel.items
+                              .map(
+                                (e) => ItemModel.fromMap(
+                                  e.toJson(),
+                                ),
+                              )
+                              .toList(),
+                          requestedDate:
+                              addOrderProvider.orderModel.requesingDate,
+                          status: 'pending',
+                          supplier: addOrderProvider.orderModel.supplier!,
+                        );
+                        await OrderService().addOrder(order);
                         loadingProvider.updateLoadingState(state: false);
                         addOrderProvider.clearOrder();
                         Alert(
