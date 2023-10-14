@@ -123,16 +123,16 @@ class _ProfileViewState extends State<ProfileView> {
               title: 'Add Site',
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: 2,
-              horizontal: defaultPadding,
-            ),
-            child: MainButton(
-              onPressed: () {},
-              title: 'Update',
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(
+          //     vertical: 2,
+          //     horizontal: defaultPadding,
+          //   ),
+          //   child: MainButton(
+          //     onPressed: () {},
+          //     title: 'Update',
+          //   ),
+          // ),
         ],
       ),
     );

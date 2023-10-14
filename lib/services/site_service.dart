@@ -28,7 +28,6 @@ class SiteService {
 
   Future<List<SiteModel>> getAllSites(String email) async {
     try {
-      final List<SiteModel> s = [];
       final response = await http.get(Uri.parse('$baseUrl/api/site/$email'));
       List l = jsonDecode(response.body).toList();
       return l.map((e) => SiteModel.fromMap(e)).toList();

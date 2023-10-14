@@ -7,7 +7,7 @@ class AddOrderProvider with ChangeNotifier {
   AddOrderModel orderModel = AddOrderModel(
     requestedBy: '',
     siteId: '',
-    supplier: null,
+    supplier: '',
     requesingDate: DateTime.now(),
     address: '',
     contactNumber: '',
@@ -16,7 +16,7 @@ class AddOrderProvider with ChangeNotifier {
 
   void setDeliveryDetails({
     required String requestedBy,
-    required SupplierModel requestedTo,
+    required String requestedTo,
     required String siteId,
     required DateTime deliveryDate,
     required String address,
@@ -35,7 +35,7 @@ class AddOrderProvider with ChangeNotifier {
     orderModel = AddOrderModel(
       requestedBy: '',
       siteId: '',
-      supplier: null,
+      supplier: '',
       requesingDate: DateTime.now(),
       address: '',
       contactNumber: '',

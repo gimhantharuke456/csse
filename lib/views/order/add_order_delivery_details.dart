@@ -145,7 +145,7 @@ class _AddOrderDeliveryDetialsState extends State<AddOrderDeliveryDetials> {
                     selectedSupplier != null) {
                   addOrderProvider.setDeliveryDetails(
                     requestedBy: requestedBy.text,
-                    requestedTo: selectedSupplier!,
+                    requestedTo: selectedSupplier!.id,
                     siteId: siteName.text,
                     deliveryDate: dateSelected!,
                     address: deliveryAddress.text,

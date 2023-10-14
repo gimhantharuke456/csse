@@ -8,7 +8,7 @@ class AddOrderModel {
   String siteId;
   DateTime requesingDate;
   String address;
-  s.SupplierModel? supplier;
+  String supplier;
   String contactNumber;
   List<OrderItem> items;
   final String status;
@@ -67,7 +67,7 @@ class AddOrderModel {
   set setAddress(String a) => address = a;
   set setContactNumber(String number) => contactNumber = number;
   set setItems(List<OrderItem> i) => items = i;
-  set setSuppler(s.SupplierModel s) => supplier = s;
+  set setSuppler(String s) => supplier = s;
 }
 
 class OrderItem {
@@ -95,7 +95,7 @@ class OrderItem {
     return OrderItem(
       name: map['name'] ?? '',
       id: map['id'] ?? '',
-      qty: int.parse(map['qty'].toString()),
+      qty: int.parse(map['quantity'].toString()),
       price: map['price'] * 1.0,
     );
   }

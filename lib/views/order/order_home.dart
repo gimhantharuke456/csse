@@ -1,4 +1,6 @@
+import 'package:csse/models/add_order_model.dart';
 import 'package:csse/providers/order_provider.dart';
+import 'package:csse/providers/user_provider.dart';
 import 'package:csse/utils/constants.dart';
 import 'package:csse/utils/index.dart';
 import 'package:csse/views/order/add_order_delivery_details.dart';
@@ -21,7 +23,9 @@ class _OrderHomeState extends State<OrderHome> {
 
   @override
   Widget build(BuildContext context) {
-    final OrderProvider orderProvider = Provider.of<OrderProvider>(context);
+    final OrderProvider orderProvider =
+        Provider.of<OrderProvider>(context, listen: false);
+    final UserProvider userProvider = Provider.of<UserProvider>(context);
     orderProvider.setOrders();
     return Scaffold(
       appBar: AppBar(
@@ -53,7 +57,16 @@ class _OrderHomeState extends State<OrderHome> {
               ),
             ),
             Consumer<OrderProvider>(
-              builder: (context, value, _) => Expanded(child: ListView()),
+              builder: (context, value, _) => Expanded(
+                  child: value.orders.isEmpty
+                      ? const Center(
+                          child: Text('No Orders'),
+                        )
+                      : ListView(
+                          children: value.orders.map((e) {
+                            return OrderCard(order: e);
+                          }).toList(),
+                        )),
             ),
           ],
         ),

@@ -14,7 +14,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
-class OrderView extends StatelessWidget {
+class OrderView extends StatefulWidget {
   final List<Map> orders;
   final double totalPrice;
   final bool haveToCreate;
@@ -28,6 +28,18 @@ class OrderView extends StatelessWidget {
   });
 
   @override
+  State<OrderView> createState() => _OrderViewState();
+}
+
+class _OrderViewState extends State<OrderView> {
+  late String status;
+  @override
+  void initState() {
+    status = widget.status ?? 'pending';
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final AddOrderProvider addOrderProvider =
         Provider.of<AddOrderProvider>(context);
@@ -38,7 +50,7 @@ class OrderView extends StatelessWidget {
       secondScreen: Scaffold(
         appBar: AppBar(
           title: Text(
-            haveToCreate ? "Order" : 'Track Order',
+            widget.haveToCreate ? "Order" : 'Track Order',
             style: titleStyle,
           ),
         ),
@@ -58,8 +70,8 @@ class OrderView extends StatelessWidget {
                     const SizedBox(
                       height: 8,
                     ),
-                    if (status != null) const Divider(),
-                    if (status != null)
+                    if (widget.status != null) const Divider(),
+                    if (widget.status != null)
                       const Text(
                         'Order information',
                         style: TextStyle(
@@ -67,11 +79,11 @@ class OrderView extends StatelessWidget {
                           fontSize: 13,
                         ),
                       ),
-                    if (status != null)
+                    if (widget.status != null)
                       const SizedBox(
                         height: 8,
                       ),
-                    if (status != null)
+                    if (widget.status != null)
                       Text.rich(
                         TextSpan(
                             text: 'Status : ',
@@ -81,15 +93,16 @@ class OrderView extends StatelessWidget {
                             ),
                             children: [
                               TextSpan(
-                                text: status?.toUpperCase(),
+                                text: widget.status?.toUpperCase(),
                                 style: TextStyle(
                                   fontWeight: FontWeight.w600,
-                                  color: orderStateColors(status ?? 'pending'),
+                                  color: orderStateColors(
+                                      widget.status ?? 'pending'),
                                 ),
                               )
                             ]),
                       ),
-                    if (status != null) const Divider(),
+                    if (widget.status != null) const Divider(),
                     const Text(
                       'Deliver information',
                       style: TextStyle(
@@ -128,135 +141,162 @@ class OrderView extends StatelessWidget {
                     const SizedBox(
                       height: 16,
                     ),
-                    const Text(
-                      'Item Information',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 13,
+                    if (widget.haveToCreate)
+                      const Text(
+                        'Item Information',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 13,
+                        ),
                       ),
-                    ),
-                    const Divider(),
-                    const DefaultTextStyle(
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
+                    if (widget.haveToCreate) const Divider(),
+                    if (widget.haveToCreate)
+                      const DefaultTextStyle(
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                              flex: 1,
+                              fit: FlexFit.tight,
+                              child: Text(
+                                'Item',
+                                textAlign: TextAlign.start,
+                              ),
+                            ),
+                            Flexible(
+                              flex: 1,
+                              fit: FlexFit.tight,
+                              child: Text(
+                                'Quantity',
+                                textAlign: TextAlign.end,
+                              ),
+                            ),
+                            Flexible(
+                              flex: 1,
+                              fit: FlexFit.tight,
+                              child: Text(
+                                'Unit Price',
+                                textAlign: TextAlign.end,
+                              ),
+                            ),
+                            Flexible(
+                              flex: 1,
+                              fit: FlexFit.tight,
+                              child: Text(
+                                'Total Amount',
+                                textAlign: TextAlign.end,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Flexible(
-                            flex: 1,
-                            fit: FlexFit.tight,
-                            child: Text(
-                              'Item',
-                              textAlign: TextAlign.start,
-                            ),
+                    if (widget.haveToCreate) const Divider(),
+                    if (!widget.haveToCreate)
+                      DropdownButtonFormField(
+                        value: status,
+                        items: const [
+                          DropdownMenuItem(
+                            child: Text('Pending'),
+                            value: 'pending',
                           ),
-                          Flexible(
-                            flex: 1,
-                            fit: FlexFit.tight,
-                            child: Text(
-                              'Quantity',
-                              textAlign: TextAlign.end,
-                            ),
+                          DropdownMenuItem(
+                            child: Text('Accepted'),
+                            value: 'accepted',
                           ),
-                          Flexible(
-                            flex: 1,
-                            fit: FlexFit.tight,
-                            child: Text(
-                              'Unit Price',
-                              textAlign: TextAlign.end,
-                            ),
-                          ),
-                          Flexible(
-                            flex: 1,
-                            fit: FlexFit.tight,
-                            child: Text(
-                              'Total Amount',
-                              textAlign: TextAlign.end,
-                            ),
+                          DropdownMenuItem(
+                            child: Text('Completed'),
+                            value: 'completed',
                           ),
                         ],
+                        onChanged: (val) {
+                          setState(() {
+                            status = val ?? 'pending';
+                          });
+                        },
                       ),
-                    ),
+                    if (widget.haveToCreate)
+                      ...addOrderProvider.orderModel.items
+                          .map(
+                            (e) => DefaultTextStyle(
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                              ),
+                              child: Row(
+                                children: [
+                                  Flexible(
+                                    flex: 1,
+                                    fit: FlexFit.tight,
+                                    child: Text(
+                                      e.name,
+                                      textAlign: TextAlign.start,
+                                    ),
+                                  ),
+                                  Flexible(
+                                    flex: 1,
+                                    fit: FlexFit.tight,
+                                    child: Text(
+                                      e.qty.toString(),
+                                      textAlign: TextAlign.end,
+                                    ),
+                                  ),
+                                  Flexible(
+                                    flex: 1,
+                                    fit: FlexFit.tight,
+                                    child: Text(
+                                      e.price.toStringAsFixed(2),
+                                      textAlign: TextAlign.end,
+                                    ),
+                                  ),
+                                  Flexible(
+                                    flex: 1,
+                                    fit: FlexFit.tight,
+                                    child: Text(
+                                      (e.price * e.qty).toStringAsFixed(2),
+                                      textAlign: TextAlign.end,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                          .toList(),
                     const Divider(),
-                    ...addOrderProvider.orderModel.items
-                        .map(
-                          (e) => DefaultTextStyle(
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
+                    if (widget.haveToCreate)
+                      DefaultTextStyle(
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Flexible(
+                              flex: 1,
+                              fit: FlexFit.tight,
+                              child: Text(
+                                'Total',
+                                textAlign: TextAlign.start,
+                              ),
                             ),
-                            child: Row(
-                              children: [
-                                Flexible(
-                                  flex: 1,
-                                  fit: FlexFit.tight,
-                                  child: Text(
-                                    e.name,
-                                    textAlign: TextAlign.start,
-                                  ),
-                                ),
-                                Flexible(
-                                  flex: 1,
-                                  fit: FlexFit.tight,
-                                  child: Text(
-                                    e.qty.toString(),
-                                    textAlign: TextAlign.end,
-                                  ),
-                                ),
-                                Flexible(
-                                  flex: 1,
-                                  fit: FlexFit.tight,
-                                  child: Text(
-                                    e.price.toStringAsFixed(2),
-                                    textAlign: TextAlign.end,
-                                  ),
-                                ),
-                                Flexible(
-                                  flex: 1,
-                                  fit: FlexFit.tight,
-                                  child: Text(
-                                    (e.price * e.qty).toStringAsFixed(2),
-                                    textAlign: TextAlign.end,
-                                  ),
-                                ),
-                              ],
+                            Flexible(
+                              flex: 1,
+                              fit: FlexFit.tight,
+                              child: Text(
+                                widget.totalPrice.toStringAsFixed(2),
+                                textAlign: TextAlign.end,
+                              ),
                             ),
-                          ),
-                        )
-                        .toList(),
-                    const Divider(),
-                    DefaultTextStyle(
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.black,
+                          ],
+                        ),
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Flexible(
-                            flex: 1,
-                            fit: FlexFit.tight,
-                            child: Text(
-                              'Total',
-                              textAlign: TextAlign.start,
-                            ),
-                          ),
-                          Flexible(
-                            flex: 1,
-                            fit: FlexFit.tight,
-                            child: Text(
-                              totalPrice.toStringAsFixed(2),
-                              textAlign: TextAlign.end,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
                     const Divider(
                       height: 8,
                       color: Colors.black,
@@ -264,7 +304,12 @@ class OrderView extends StatelessWidget {
                   ],
                 ),
               ),
-              if (haveToCreate)
+              if (!widget.haveToCreate)
+                Padding(
+                  padding: const EdgeInsets.all(defaultPadding),
+                  child: MainButton(onPressed: () {}, title: 'Update'),
+                ),
+              if (widget.haveToCreate)
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: MainButton(
@@ -282,7 +327,7 @@ class OrderView extends StatelessWidget {
                           requestedDate:
                               addOrderProvider.orderModel.requesingDate,
                           status: 'pending',
-                          supplier: addOrderProvider.orderModel.supplier!,
+                          supplier: addOrderProvider.orderModel.supplier,
                         );
                         await OrderService().addOrder(order);
                         loadingProvider.updateLoadingState(state: false);
@@ -304,6 +349,7 @@ class OrderView extends StatelessWidget {
                         ).show();
                       } catch (e) {
                         context.showSnackBar(e.toString());
+                        loadingProvider.updateLoadingState(state: false);
                       }
                     },
                     title: 'Make Order',

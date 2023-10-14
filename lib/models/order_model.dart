@@ -1,7 +1,7 @@
 class OrderModel {
   final String? id;
   final List<ItemModel> items;
-  final SupplierModel supplier;
+  final String supplier;
   final DateTime requestedDate;
   final String status;
 
@@ -18,7 +18,7 @@ class OrderModel {
       id: map['_id'],
       items: List<ItemModel>.from(
           map['items'].map((item) => ItemModel.fromMap(item))),
-      supplier: SupplierModel.fromMap(map['supplier']),
+      supplier: map['supplier'],
       requestedDate: DateTime.parse(map['requestedDate']),
       status: map['status'],
     );
@@ -28,7 +28,7 @@ class OrderModel {
     return {
       '_id': id,
       'items': items.map((item) => item.toMap()).toList(),
-      'supplier': supplier.toMap(),
+      'supplier': supplier,
       'requestedDate': requestedDate.toIso8601String(),
       'status': status,
     };
@@ -38,13 +38,18 @@ class OrderModel {
 class ItemModel {
   final String name;
   final int quantity;
-
-  ItemModel({required this.name, required this.quantity});
+  final double price;
+  ItemModel({
+    required this.name,
+    required this.quantity,
+    required this.price,
+  });
 
   factory ItemModel.fromMap(Map<String, dynamic> map) {
     return ItemModel(
-      name: map['name'],
-      quantity: map['quantity'],
+      name: map['name'] ?? '',
+      quantity: map['quantity'] ?? 0,
+      price: map['price'] ?? 0,
     );
   }
 
@@ -52,6 +57,7 @@ class ItemModel {
     return {
       'name': name,
       'quantity': quantity,
+      'price': price,
     };
   }
 }

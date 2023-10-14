@@ -28,8 +28,9 @@ class _AddOrderItemsState extends State<AddOrderItems> {
   double totalPrice = 0.0;
   late AddOrderProvider addOrderProvider;
 
-  final qty = TextEditingController();
-  Product? selectedValue;
+  final quantity = TextEditingController();
+  TextEditingController itemName = TextEditingController();
+  TextEditingController price = TextEditingController();
   @override
   void initState() {
     addOrderProvider = Provider.of<AddOrderProvider>(context, listen: false);
@@ -56,11 +57,14 @@ class _AddOrderItemsState extends State<AddOrderItems> {
   }
 
   void addProduct() {
-    if (selectedValue != null && qty.text.isNotEmpty) {
+    if (itemName.text.isNotEmpty &&
+        quantity.text.isNotEmpty &&
+        price.text.isNotEmpty) {
       setState(() {
         selectedProducts.add({
-          ...selectedValue!.toMap(),
-          "qty": qty.text,
+          'name': itemName.text,
+          "quantity": quantity.text,
+          'price': double.parse(price.text),
         });
       });
     }
@@ -69,7 +73,7 @@ class _AddOrderItemsState extends State<AddOrderItems> {
   void calculateTotalBill() {
     totalPrice = 0;
     for (Map product in selectedProducts) {
-      totalPrice += (product['price'] * int.parse(product['qty']));
+      totalPrice += (product['price'] * int.parse(product['quantity']));
     }
     setState(() {});
   }
@@ -86,180 +90,164 @@ class _AddOrderItemsState extends State<AddOrderItems> {
               ),
               centerTitle: true,
             ),
-            body: products.isEmpty
-                ? const Center(
-                    child: Text('There aren t any products from this supplier'),
-                  )
-                : Column(
+            body: Column(
+              children: [
+                Expanded(
+                  child: ListView(
+                    padding: const EdgeInsets.all(defaultPadding),
                     children: [
-                      Expanded(
-                        child: ListView(
-                          padding: const EdgeInsets.all(defaultPadding),
-                          children: [
-                            const SizedBox(
-                              height: defaultPadding,
+                      const SizedBox(
+                        height: defaultPadding,
+                      ),
+                      Text(
+                        AppStrings.subTitleAddItem,
+                        style: subTitleStyle,
+                      ),
+                      Row(
+                        children: [
+                          Flexible(
+                            flex: 1,
+                            fit: FlexFit.tight,
+                            child: CustomInputField(
+                              controller: itemName,
+                              hint: 'Item Name',
+                              label: 'Item Name',
                             ),
-                            Text(
-                              AppStrings.subTitleAddItem,
-                              style: subTitleStyle,
+                          ),
+                          Flexible(
+                            flex: 1,
+                            fit: FlexFit.tight,
+                            child: CustomInputField(
+                              controller: quantity,
+                              label: 'Quantity',
+                              hint: 'Quantity',
+                              inputType: TextInputType.number,
                             ),
-                            Row(
-                              children: [
-                                Flexible(
-                                  flex: 1,
-                                  fit: FlexFit.tight,
-                                  child: DropdownButtonFormField<Product>(
-                                    value: selectedValue,
-                                    items: products
-                                        .map((e) => DropdownMenuItem<Product>(
-                                            value: e,
-                                            child: Text(
-                                              e.name,
-                                            )))
-                                        .toList(),
-                                    onChanged: (Product? val) {
-                                      if (val != null) {
-                                        setState(() {
-                                          selectedValue = val;
-                                        });
-                                      }
-                                    },
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
-                                      filled: true,
-                                      fillColor: Colors.grey[200],
-                                    ),
-                                  ),
-                                ),
-                                Flexible(
-                                  flex: 1,
-                                  fit: FlexFit.tight,
-                                  child: CustomInputField(
-                                    controller: qty,
-                                    label: 'Quantity',
-                                    hint: 'Quantity',
-                                    inputType: TextInputType.number,
-                                  ),
-                                )
-                              ],
+                          ),
+                          Flexible(
+                            flex: 1,
+                            fit: FlexFit.tight,
+                            child: CustomInputField(
+                              controller: price,
+                              label: 'Price',
+                              hint: 'Price',
+                              inputType: TextInputType.number,
                             ),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Divider(
-                                    height: 10,
-                                    color: Colors.grey[900],
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 8,
-                                ),
-                                Container(
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey[900],
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: IconButton(
-                                    onPressed: () {
-                                      addProduct();
-                                      calculateTotalBill();
-                                      selectedValue = null;
-                                      qty.clear();
-                                      setState(() {});
-                                    },
-                                    icon: const Icon(
-                                      Icons.add,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 8,
-                                ),
-                                Expanded(
-                                  child: Divider(
-                                    height: 10,
-                                    color: Colors.grey[900],
-                                  ),
-                                ),
-                              ],
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Divider(
+                              height: 10,
+                              color: Colors.grey[900],
                             ),
-                            const Row(
+                          ),
+                          const SizedBox(
+                            width: 8,
+                          ),
+                          Container(
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[900],
+                              shape: BoxShape.circle,
+                            ),
+                            child: IconButton(
+                              onPressed: () {
+                                addProduct();
+                                calculateTotalBill();
+                                itemName.clear();
+                                quantity.clear();
+                                price.clear();
+                                setState(() {});
+                              },
+                              icon: const Icon(
+                                Icons.add,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 8,
+                          ),
+                          Expanded(
+                            child: Divider(
+                              height: 10,
+                              color: Colors.grey[900],
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Item",
+                            style: subTitleStyle,
+                          ),
+                          Text(
+                            "Quantity",
+                            style: subTitleStyle,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      ...selectedProducts
+                          .map(
+                            (e) => Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  "Item",
-                                  style: subTitleStyle,
+                                  e["name"],
                                 ),
-                                Text(
-                                  "Quantity",
-                                  style: subTitleStyle,
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      e["quantity"],
+                                    ),
+                                    IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          selectedProducts.remove(e);
+                                        });
+                                        calculateTotalBill();
+                                      },
+                                      icon: const Icon(
+                                        Icons.delete,
+                                      ),
+                                    )
+                                  ],
                                 ),
                               ],
                             ),
-                            const SizedBox(
-                              height: 16,
-                            ),
-                            ...selectedProducts
-                                .map(
-                                  (e) => Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        e["name"],
-                                      ),
-                                      Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Text(
-                                            e["qty"],
-                                          ),
-                                          IconButton(
-                                            onPressed: () {
-                                              setState(() {
-                                                selectedProducts.remove(e);
-                                              });
-                                              calculateTotalBill();
-                                            },
-                                            icon: const Icon(
-                                              Icons.delete,
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                )
-                                .toList()
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(defaultPadding),
-                        child: MainButton(
-                          onPressed: () {
-                            addOrderProvider.orderModel.setItems =
-                                selectedProducts
-                                    .map((e) => OrderItem.fromMap(e))
-                                    .toList();
-                            context.navigator(
-                                context,
-                                OrderView(
-                                  orders: selectedProducts,
-                                  totalPrice: totalPrice,
-                                ));
-                          },
-                          title:
-                              'Total Amount Rs. ${totalPrice.toStringAsFixed(2)}',
-                        ),
-                      )
+                          )
+                          .toList()
                     ],
                   ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(defaultPadding),
+                  child: MainButton(
+                    onPressed: () {
+                      addOrderProvider.orderModel.setItems = selectedProducts
+                          .map((e) => OrderItem.fromMap(e))
+                          .toList();
+                      context.navigator(
+                          context,
+                          OrderView(
+                            orders: selectedProducts,
+                            totalPrice: totalPrice,
+                          ));
+                    },
+                    title: 'Total Amount Rs. ${totalPrice.toStringAsFixed(2)}',
+                  ),
+                )
+              ],
+            ),
           );
   }
 }
