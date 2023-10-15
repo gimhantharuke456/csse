@@ -20,7 +20,6 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Widget> get homeBody => [
         ItemScreen(),
         OrderHome(),
-        Container(),
         ProfileView(),
       ];
   final _supplierService = SupplierService();
@@ -60,10 +59,6 @@ class _HomeScreenState extends State<HomeScreen> {
             BottomNavigationBarItem(
               icon: Icon(Icons.shopping_bag),
               label: "Orders",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.delivery_dining),
-              label: "Deliveries",
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person),
