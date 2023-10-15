@@ -241,6 +241,8 @@ class _AddOrderItemsState extends State<AddOrderItems> {
                           OrderView(
                             orders: selectedProducts,
                             totalPrice: totalPrice,
+                            orderId: '',
+                            orderModel: null,
                           ));
                     },
                     title: 'Total Amount Rs. ${totalPrice.toStringAsFixed(2)}',

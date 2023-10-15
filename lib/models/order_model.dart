@@ -3,7 +3,7 @@ class OrderModel {
   final List<ItemModel> items;
   final String supplier;
   final DateTime requestedDate;
-  final String status;
+  String status;
 
   OrderModel({
     this.id,
@@ -23,6 +23,7 @@ class OrderModel {
       status: map['status'],
     );
   }
+  set setStatus(String s) => status = s;
 
   Map<String, dynamic> toMap() {
     return {

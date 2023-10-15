@@ -19,12 +19,16 @@ class OrderView extends StatefulWidget {
   final double totalPrice;
   final bool haveToCreate;
   final String? status;
+  final String orderId;
+  final OrderModel? orderModel;
   const OrderView({
     super.key,
     required this.orders,
     required this.totalPrice,
     this.haveToCreate = true,
     this.status,
+    required this.orderId,
+    required this.orderModel,
   });
 
   @override
@@ -307,7 +311,21 @@ class _OrderViewState extends State<OrderView> {
               if (!widget.haveToCreate)
                 Padding(
                   padding: const EdgeInsets.all(defaultPadding),
-                  child: MainButton(onPressed: () {}, title: 'Update'),
+                  child: MainButton(
+                      onPressed: () async {
+                        if (widget.orderModel != null) {
+                          try {
+                            OrderModel o = widget.orderModel!;
+                            o.setStatus = status;
+                            print(status);
+                            await OrderService().updateOrder(o);
+                            context.showSnackBar('Updated successfully');
+                          } catch (e) {
+                            context.showSnackBar(e.toString());
+                          }
+                        }
+                      },
+                      title: 'Update'),
                 ),
               if (widget.haveToCreate)
                 Padding(

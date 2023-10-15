@@ -58,6 +58,8 @@ class OrderCard extends StatelessWidget {
                     haveToCreate: false,
                     orders: order.items.map((e) => e.toMap()).toList(),
                     totalPrice: total,
+                    orderId: order.id ?? '',
+                    orderModel: order,
                   ),
                 );
               } catch (e) {
