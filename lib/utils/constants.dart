@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 //urls
 const String baseUrl =
-    'https://dd3e-2402-4000-21c2-d504-5df7-1123-9f56-9e08.ngrok-free.app';
+    'https://33af-2402-4000-21c2-d504-5df7-1123-9f56-9e08.ngrok-free.app';
 
 //colors
 const Color primaryColor = Color.fromARGB(255, 142, 154, 245);
