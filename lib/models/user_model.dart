@@ -36,7 +36,7 @@ class UserModel {
       id: map['_id'],
       name: map['name'],
       email: map['email'],
-      role: map['role'],
+      role: map['role'] ?? 'supplier',
     );
   }
 }

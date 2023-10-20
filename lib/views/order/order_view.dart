@@ -2,6 +2,7 @@ import 'package:csse/models/add_order_model.dart';
 import 'package:csse/models/order_model.dart';
 import 'package:csse/providers/add_order_provider.dart';
 import 'package:csse/providers/loading_provider.dart';
+import 'package:csse/providers/user_provider.dart';
 import 'package:csse/services/order_service.dart';
 import 'package:csse/utils/constants.dart';
 import 'package:csse/utils/index.dart';
@@ -47,7 +48,7 @@ class _OrderViewState extends State<OrderView> {
   Widget build(BuildContext context) {
     final AddOrderProvider addOrderProvider =
         Provider.of<AddOrderProvider>(context);
-
+    final userProvider = Provider.of<UserProvider>(context);
     final LoadingProvider loadingProvider =
         Provider.of<LoadingProvider>(context);
     return LoadingWrapper(
@@ -115,14 +116,11 @@ class _OrderViewState extends State<OrderView> {
                       ),
                     ),
                     const Divider(),
-                    Text(
-                      'Supplier : ${addOrderProvider.orderModel.supplier}',
-                    ),
                     const SizedBox(
                       height: 8,
                     ),
                     Text(
-                      'Site : ${addOrderProvider.orderModel.siteId}',
+                      'Site : ${userProvider.site?.name}',
                     ),
                     const SizedBox(
                       height: 8,
@@ -215,6 +213,10 @@ class _OrderViewState extends State<OrderView> {
                           DropdownMenuItem(
                             child: Text('Completed'),
                             value: 'completed',
+                          ),
+                          DropdownMenuItem(
+                            child: Text('Rejected'),
+                            value: 'rejected',
                           ),
                         ],
                         onChanged: (val) {

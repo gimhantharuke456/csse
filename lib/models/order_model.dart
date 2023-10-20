@@ -49,7 +49,7 @@ class ItemModel {
   factory ItemModel.fromMap(Map<String, dynamic> map) {
     return ItemModel(
       name: map['name'] ?? '',
-      quantity: map['quantity'] ?? 0,
+      quantity: map['qty'] ?? 0,
       price: map['price'] ?? 0,
     );
   }
@@ -83,11 +83,11 @@ class SupplierModel {
   factory SupplierModel.fromMap(Map<String, dynamic> map) {
     return SupplierModel(
       id: map['_id'],
-      supID: map['supID'],
-      name: map['sname'],
-      email: map['semail'],
-      contact: map['scontact'],
-      company: map['scompany'],
+      supID: map['supID'] ?? "",
+      name: map['name'] ?? '',
+      email: map['semail'] ?? '',
+      contact: map['scontact'] ?? '',
+      company: map['scompany'] ?? '',
     );
   }
 

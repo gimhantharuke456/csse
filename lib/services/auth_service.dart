@@ -2,6 +2,7 @@ import 'package:csse/models/user_model.dart';
 import 'package:csse/services/local_prefs.dart';
 import 'package:csse/services/api_handler.dart';
 import 'package:csse/utils/constants.dart';
+import 'package:flutter/material.dart';
 
 class AuthService {
   final _localPrefs = LocalPreferences.instance;
@@ -26,6 +27,7 @@ class AuthService {
   Future<UserModel?> getCurrentUser() async {
     try {
       final String? userId = _localPrefs.getUid();
+      debugPrint("userId $userId");
       if (userId != null) {
         final response = await _apiHandler.get('site-managers/$userId');
         return UserModel.fromMap(response);
