@@ -11,14 +11,15 @@ class AuthService {
   Future<void> signinWithEmailAndPassword(String email, String password) async {
     try {
       final response = await _apiHandler
-          .post('site-managers/login', {'email': email, 'password': password});
+          .post('site-managers/signin', {'email': email, 'password': password});
       // Assuming your backend returns a token upon successful login
-      final String? token = response['_id'];
+      final String? token = response['siteManager']['_id'];
       if (token != null) {
         _localPrefs.setUid(token);
         _localPrefs.setToken(token);
         _localPrefs.setEmail(email);
       }
+      print("signin success");
     } catch (e) {
       throw Error.safeToString(e);
     }
@@ -30,6 +31,7 @@ class AuthService {
       debugPrint("userId $userId");
       if (userId != null) {
         final response = await _apiHandler.get('site-managers/$userId');
+        print(response);
         return UserModel.fromMap(response);
       }
       return null;
@@ -54,12 +56,14 @@ class AuthService {
         'name': name,
       });
 
+      print(response);
+
       final String? token = response['_id'];
       if (token != null) {
         _localPrefs.setUid(token);
         _localPrefs.setToken(token);
         _localPrefs.setEmail(email);
-      }
+      } else {}
       return token;
     } catch (e) {
       throw Error.safeToString(e);
